@@ -52,6 +52,7 @@ public class CounterActivity extends Activity {
             ResultsUri = extras
                     .getParcelable(ResultsContentProvider.CONTENT_ITEM_TYPE);
             fillData(CategoryUri, ResultsUri);
+            count = Integer.parseInt(mCounterInt.getText().toString());
         }
 //        increase.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View view) {
@@ -67,12 +68,14 @@ public class CounterActivity extends Activity {
         increase.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 count ++;
+                mCounterInt.setText(Integer.toString(count));
             }
 
         });
         decrease.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 count --;
+                mCounterInt.setText(Integer.toString(count));
             }
 
         });
@@ -98,6 +101,7 @@ public class CounterActivity extends Activity {
             resultsCursor.moveToFirst();
             mCounterInt.setText(resultsCursor.getString(resultsCursor
                     .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
+
             // always close the cursor
             resultsCursor.close();
         }
@@ -130,8 +134,6 @@ public class CounterActivity extends Activity {
         //results values
         ContentValues resultsValues = new ContentValues();
         resultsValues.put(ResultsTable.COLUMN_RESULT,data);
-
-
 
         if (CategoryUri == null) {
             // New cagetory which means zero data or new data
