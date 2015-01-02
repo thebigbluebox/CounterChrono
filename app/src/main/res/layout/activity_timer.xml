@@ -13,8 +13,7 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:id="@+id/title_editable"
             android:hint="@string/titlehint"
             android:layout_gravity="center_horizontal"/>
@@ -22,16 +21,17 @@
         <Chronometer
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:id="@+id/chronometer"
             android:layout_gravity="center_horizontal"
-            android:textSize="60dp" />
+            android:textSize="60dp"
+            android:gravity="center" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:text="Start"
+            android:text="Pause"
             android:id="@+id/pause_button"
             android:layout_gravity="center_horizontal"
             android:textSize="50dp"
@@ -41,10 +41,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:text="Pause"
+            android:text="Start"
             android:id="@+id/start_reset_button"
             android:layout_gravity="center_horizontal"
-            android:textSize="40dp"
+            android:textSize="50dp"
             android:background="#ffffffff" />
     </LinearLayout>
 </LinearLayout>

@@ -3,6 +3,7 @@ package theperfectsquare.counterandchrono;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -10,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -40,7 +42,7 @@ public class TimerActivity extends Activity {
         mTitleText = (EditText) findViewById(R.id.title_editable);
         mDataText = (Chronometer) findViewById(R.id.chronometer);
         Button startButton = (Button) findViewById(R.id.start_reset_button);
-        Button pauseButton = (Button) findViewById((R.id.pause_button));
+        final Button pauseButton = (Button) findViewById((R.id.pause_button));
 
         mDataText.setBase(SystemClock.elapsedRealtime());
 
@@ -89,6 +91,24 @@ public class TimerActivity extends Activity {
                     stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
                     running = false;
                 }
+
+            }
+        });
+        pauseButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    // on release
+                    pauseButton.setBackgroundColor(Color.WHITE);
+                    pauseButton.setTextColor(Color.BLACK);
+                    pauseButton.setText("Pause");
+                }else{
+                    // on touch
+                    pauseButton.setBackgroundColor(Color.RED);
+                    pauseButton.setTextColor(Color.WHITE);
+                    pauseButton.setText("Hold to Reset");
+                }
+                return false;
             }
         });
     }

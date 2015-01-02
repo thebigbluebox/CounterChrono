@@ -3,10 +3,12 @@ package theperfectsquare.counterandchrono;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +39,7 @@ public class CounterActivity extends Activity {
         mTitleText = (EditText) findViewById(R.id.title_editable);
         mCounterInt = (TextView) findViewById(R.id.counter);
         Button increase = (Button) findViewById(R.id.increase_button);
-        Button decrease = (Button) findViewById(R.id.decrease_button);
+        final Button decrease = (Button) findViewById(R.id.decrease_button);
 
         Bundle extras = getIntent().getExtras();
 
@@ -69,6 +71,31 @@ public class CounterActivity extends Activity {
                 mCounterInt.setText(Integer.toString(count));
             }
 
+        });
+        decrease.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                count = 0;
+                mCounterInt.setText(Integer.toString(count));
+                return false;
+            }
+        });
+        decrease.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    // on release
+                    decrease.setBackgroundColor(Color.WHITE);
+                    decrease.setTextColor(Color.BLACK);
+                    decrease.setText("-");
+                }else{
+                    // on touch
+                    decrease.setBackgroundColor(Color.RED);
+                    decrease.setTextColor(Color.WHITE);
+                    decrease.setText("Hold to Reset");
+                }
+                return false;
+            }
         });
     }
 
