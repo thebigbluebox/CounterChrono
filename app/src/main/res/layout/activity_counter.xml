@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/title"
+            android:id="@+id/title_editable"
             android:hint="@string/titlehint"
             android:layout_gravity="center_horizontal"/>
 
@@ -28,25 +28,26 @@
             android:id="@+id/counter"
             android:layout_gravity="center_horizontal"
             android:textSize="60dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
+            android:paddingTop="15dp" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
             android:text="+"
-            android:id="@+id/increase"
+            android:id="@+id/increase_button"
             android:layout_gravity="center_horizontal"
-            android:textSize="50dp" />
+            android:textSize="50dp"
+            android:background="#ffffffff" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
             android:text="-"
-            android:id="@+id/decrease"
+            android:id="@+id/decrease_button"
             android:layout_gravity="center_horizontal"
-            android:textSize="50dp" />
+            android:textSize="50dp"
+            android:background="#ffffffff" />
     </LinearLayout>
 </LinearLayout>

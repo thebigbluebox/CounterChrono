@@ -5,13 +5,16 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import theperfectsquare.counterandchrono.contentprovider.CategoriesContentProvider;
@@ -23,17 +26,23 @@ import theperfectsquare.counterandchrono.database.ResultsTable;
 public class TimerActivity extends Activity {
 
     private EditText mTitleText;
-    private EditText mDataText;
+    private Chronometer mDataText;
+    private boolean running = false;
+    private long startTime = 0L;
+    private long stopTime = 0L;
     private Uri CategoryUri;
     private Uri ResultsUri;
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.activity_counter);
+        setContentView(R.layout.activity_timer);
 
-        mTitleText = (EditText) findViewById(R.id.categories_edit_title);
-        mDataText = (EditText) findViewById(R.id.categories_edit_data);
-        Button confirmButton = (Button) findViewById(R.id.categories_edit_button);
+        mTitleText = (EditText) findViewById(R.id.title_editable);
+        mDataText = (Chronometer) findViewById(R.id.chronometer);
+        Button startButton = (Button) findViewById(R.id.start_reset_button);
+        Button pauseButton = (Button) findViewById((R.id.pause_button));
+
+        mDataText.setBase(SystemClock.elapsedRealtime());
 
         Bundle extras = getIntent().getExtras();
 
@@ -51,16 +60,36 @@ public class TimerActivity extends Activity {
                     .getParcelable(ResultsContentProvider.CONTENT_ITEM_TYPE);
             fillData(CategoryUri, ResultsUri);
         }
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (TextUtils.isEmpty(mTitleText.getText().toString())) {
-                    makeToast();
-                } else {
-                    setResult(RESULT_OK);
-                    finish();
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(!running) {
+                    mDataText.setBase(SystemClock.elapsedRealtime() - stopTime);
+                    ((Chronometer) findViewById(R.id.chronometer)).start();
+                    startTime = System.currentTimeMillis();
+                    running = true;
                 }
             }
+        });
+        pauseButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mDataText.setBase(SystemClock.elapsedRealtime());
+                mDataText.stop();
+                stopTime = 0;
+                running = false;
+                return false;
+            }
+        });
 
+        pauseButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(running == true){
+                    ((Chronometer) findViewById(R.id.chronometer)).stop();
+                    stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
+                    running = false;
+                }
+            }
         });
     }
 
@@ -82,8 +111,9 @@ public class TimerActivity extends Activity {
             categoryCursor.close();
 
             resultsCursor.moveToFirst();
-            mDataText.setText(resultsCursor.getString(resultsCursor
-                    .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
+            //mDataText.setBase(SystemClock.elapsedRealtime() - stopTime);
+            mDataText.setBase(SystemClock.elapsedRealtime() - Long.parseLong(resultsCursor.getString(resultsCursor
+                    .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT))));
             // always close the cursor
             resultsCursor.close();
         }
@@ -104,14 +134,18 @@ public class TimerActivity extends Activity {
 
     private void saveState() {
         String summary = mTitleText.getText().toString();
-        String data = mDataText.getText().toString();
+        //pauses the clock so data can be saved
+        ((Chronometer) findViewById(R.id.chronometer)).stop();
+        stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
+        String data = Long.toString(stopTime);
+
         // only save if either summary or description
         // is available
 
         //category values
         ContentValues categoryValues = new ContentValues();
         categoryValues.put(CategoriesTable.COLUMN_NAME, summary);
-        categoryValues.put(CategoriesTable.COLUMN_TYPE, "counter");
+        categoryValues.put(CategoriesTable.COLUMN_TYPE, "timer");
 
         //results values
         ContentValues resultsValues = new ContentValues();

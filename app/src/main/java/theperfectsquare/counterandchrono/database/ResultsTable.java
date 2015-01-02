@@ -20,10 +20,10 @@ public class ResultsTable {
     private static final String DATABASE_CREATE = "create table "
             + TABLE_RESULTS
             + "("
-            + COLUMN_ID + " integer primary key, "
-            + COLUMN_DATE + " date,"
-            + COLUMN_CATEGORY_ID + " text,"
-            + COLUMN_RESULT + " text,"
+            + COLUMN_ID + " integer primary key not null, "
+            + COLUMN_DATE + " date not null,"
+            + COLUMN_CATEGORY_ID + " text not null,"
+            + COLUMN_RESULT + " text not null,"
             + "foreign key (" + COLUMN_CATEGORY_ID + ") references " + TABLE_CATEGORIES + "(" + TABLE_CATEGORIES_ID + ")"
             + ");";
 

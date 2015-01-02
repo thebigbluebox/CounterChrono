@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import theperfectsquare.counterandchrono.contentprovider.CategoriesContentProvider;
 import theperfectsquare.counterandchrono.contentprovider.ResultsContentProvider;
 import theperfectsquare.counterandchrono.database.CategoriesTable;
@@ -32,10 +34,10 @@ public class CounterActivity extends Activity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_counter);
 
-        mTitleText = (EditText) findViewById(R.id.title);
+        mTitleText = (EditText) findViewById(R.id.title_editable);
         mCounterInt = (TextView) findViewById(R.id.counter);
-        Button increase = (Button) findViewById(R.id.increase);
-        Button decrease = (Button) findViewById(R.id.decrease);
+        Button increase = (Button) findViewById(R.id.increase_button);
+        Button decrease = (Button) findViewById(R.id.decrease_button);
 
         Bundle extras = getIntent().getExtras();
 
@@ -54,17 +56,6 @@ public class CounterActivity extends Activity {
             fillData(CategoryUri, ResultsUri);
             count = Integer.parseInt(mCounterInt.getText().toString());
         }
-//        increase.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                if (TextUtils.isEmpty(mTitleText.getText().toString())) {
-//                    makeToast();
-//                } else {
-//                    setResult(RESULT_OK);
-//                    finish();
-//                }
-//            }
-//
-//        });
         increase.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 count ++;
@@ -123,6 +114,8 @@ public class CounterActivity extends Activity {
     private void saveState() {
         String summary = mTitleText.getText().toString();
         String data = mCounterInt.getText().toString();
+        Calendar cal = Calendar.getInstance();
+        int dateInSeconds = (int)((cal.getTimeInMillis()+cal.getTimeZone().getOffset(cal.getTimeInMillis()))/1000);
         // only save if either summary or description
         // is available
 
@@ -134,6 +127,7 @@ public class CounterActivity extends Activity {
         //results values
         ContentValues resultsValues = new ContentValues();
         resultsValues.put(ResultsTable.COLUMN_RESULT,data);
+        resultsValues.put(ResultsTable.COLUMN_DATE,dateInSeconds);
 
         if (CategoryUri == null) {
             // New cagetory which means zero data or new data
