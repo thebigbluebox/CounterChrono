@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Counter and Chrono</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="none_display">No Entries to Show</string>
+    <string name="menu_delete">Delete Selected</string>
+    <string name="new_timer">Timer</string>
+    <string name="new_counter">Counter</string>
+    <string name="title_activity_recording">RecordingActivity</string>
+    <string name="categories_edit_confirm">Confirm</string>
+    <string name="title_activity_timer">TimerActivity</string>
+    <string name="title_activity_counter">CounterActivity</string>
+    <string name="titlehint">Enter Title</string>
+</resources>

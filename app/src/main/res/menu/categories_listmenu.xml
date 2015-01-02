@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:theperfectsquare.counterandchrono="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/NewCounter"
+        theperfectsquare.counterandchrono:showAsAction="always"
+        android:title="@string/new_counter">
+    </item>
+    <item
+        android:id="@+id/NewTimer"
+        theperfectsquare.counterandchrono:showAsAction="always"
+        android:title="@string/new_timer">
+    </item>
+
+</menu> 
