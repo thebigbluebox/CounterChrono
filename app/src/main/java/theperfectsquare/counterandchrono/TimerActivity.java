@@ -134,6 +134,8 @@ public class TimerActivity extends Activity {
             //mDataText.setBase(SystemClock.elapsedRealtime() - stopTime);
             mDataText.setBase(SystemClock.elapsedRealtime() - Long.parseLong(resultsCursor.getString(resultsCursor
                     .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT))));
+            stopTime =Long.parseLong(resultsCursor.getString(resultsCursor
+                            .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
             // always close the cursor
             resultsCursor.close();
         }
