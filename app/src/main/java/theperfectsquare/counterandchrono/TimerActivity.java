@@ -7,17 +7,18 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import theperfectsquare.counterandchrono.contentprovider.CategoriesContentProvider;
 import theperfectsquare.counterandchrono.contentprovider.ResultsContentProvider;
@@ -29,6 +30,7 @@ public class TimerActivity extends Activity {
 
     private EditText mTitleText;
     private Chronometer mDataText;
+    private TextView mUpdatedText;
     private boolean running = false;
     private long startTime = 0L;
     private long stopTime = 0L;
@@ -41,10 +43,10 @@ public class TimerActivity extends Activity {
 
         mTitleText = (EditText) findViewById(R.id.title_editable);
         mDataText = (Chronometer) findViewById(R.id.chronometer);
-        Button startButton = (Button) findViewById(R.id.start_reset_button);
-        final Button pauseButton = (Button) findViewById((R.id.pause_button));
-
+        mUpdatedText = (TextView) findViewById((R.id.lastupdate));
         mDataText.setBase(SystemClock.elapsedRealtime());
+        final Button startButton = (Button) findViewById(R.id.start_reset_button);
+        final Button pauseButton = (Button) findViewById((R.id.pause_button));
 
         Bundle extras = getIntent().getExtras();
 
@@ -138,6 +140,12 @@ public class TimerActivity extends Activity {
                     .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT))));
             stopTime =Long.parseLong(resultsCursor.getString(resultsCursor
                             .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
+
+            long datesec = resultsCursor.getLong(resultsCursor.getColumnIndexOrThrow(ResultsTable.COLUMN_DATE));
+            Date date = new Date(datesec*1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d,yyyy", Locale.ENGLISH);
+            String formattedDate = sdf.format(date);
+            mUpdatedText.setText(formattedDate);
             // always close the cursor
             resultsCursor.close();
         }
@@ -162,7 +170,9 @@ public class TimerActivity extends Activity {
         ((Chronometer) findViewById(R.id.chronometer)).stop();
         stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
         String data = Long.toString(stopTime);
-
+        Calendar cal = Calendar.getInstance();
+        //for saving the date value for the data
+        long dateInSeconds = (long)((cal.getTimeInMillis()+cal.getTimeZone().getOffset(cal.getTimeInMillis()))/1000);
         // only save if either summary or description
         // is available
 
@@ -174,8 +184,7 @@ public class TimerActivity extends Activity {
         //results values
         ContentValues resultsValues = new ContentValues();
         resultsValues.put(ResultsTable.COLUMN_RESULT,data);
-
-
+        resultsValues.put(ResultsTable.COLUMN_DATE,dateInSeconds);
 
         if (CategoryUri == null) {
             // New cagetory which means zero data or new data
@@ -188,10 +197,5 @@ public class TimerActivity extends Activity {
             getContentResolver().update(CategoryUri, categoryValues, null, null);
             getContentResolver().update(ResultsUri, resultsValues, null, null);
         }
-    }
-
-    private void makeToast() {
-        Toast.makeText(TimerActivity.this, "Please maintain a summary",
-                Toast.LENGTH_LONG).show();
     }
 }

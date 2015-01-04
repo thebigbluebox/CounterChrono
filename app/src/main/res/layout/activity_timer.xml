@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/title_editable"
             android:hint="@string/titlehint"
+            android:singleLine="true"
             android:layout_gravity="center_horizontal"/>
 
         <Chronometer
@@ -26,6 +27,14 @@
             android:layout_gravity="center_horizontal"
             android:textSize="60dp"
             android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Last updated : Never"
+            android:id="@+id/lastupdate"
+            android:layout_gravity="center_horizontal" />
 
         <Button
             android:layout_width="match_parent"

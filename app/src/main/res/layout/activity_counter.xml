@@ -13,10 +13,10 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:id="@+id/title_editable"
             android:hint="@string/titlehint"
+            android:singleLine="true"
             android:layout_gravity="center_horizontal"/>
 
         <TextView
@@ -28,7 +28,15 @@
             android:id="@+id/counter"
             android:layout_gravity="center_horizontal"
             android:textSize="60dp"
-            android:paddingTop="15dp" />
+            android:paddingTop="15dp"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Last updated : Never"
+            android:id="@+id/lastupdate"
+            android:layout_gravity="center_horizontal" />
 
         <Button
             android:layout_width="match_parent"

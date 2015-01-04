@@ -6,16 +6,17 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import theperfectsquare.counterandchrono.contentprovider.CategoriesContentProvider;
 import theperfectsquare.counterandchrono.contentprovider.ResultsContentProvider;
@@ -27,6 +28,7 @@ public class CounterActivity extends Activity {
 
     private EditText mTitleText;
     private TextView mCounterInt;
+    private TextView mUpdatedText;
     private Uri CategoryUri;
     private Uri ResultsUri;
     private int count= 0;
@@ -38,6 +40,7 @@ public class CounterActivity extends Activity {
 
         mTitleText = (EditText) findViewById(R.id.title_editable);
         mCounterInt = (TextView) findViewById(R.id.counter);
+        mUpdatedText = (TextView) findViewById((R.id.lastupdate));
         Button increase = (Button) findViewById(R.id.increase_button);
         final Button decrease = (Button) findViewById(R.id.decrease_button);
 
@@ -109,7 +112,7 @@ public class CounterActivity extends Activity {
         String[] categoryProjection = { CategoriesTable.COLUMN_TYPE, CategoriesTable.COLUMN_NAME};
         Cursor categoryCursor = getContentResolver().query(categoryUri, categoryProjection, null, null, null);
 
-        String[] resultsProjection = { ResultsTable.COLUMN_ID, ResultsTable.COLUMN_RESULT, ResultsTable.COLUMN_CATEGORY_ID};
+        String[] resultsProjection = { ResultsTable.COLUMN_ID, ResultsTable.COLUMN_RESULT, ResultsTable.COLUMN_CATEGORY_ID, ResultsTable.COLUMN_DATE};
         Cursor resultsCursor = getContentResolver().query(resultsUri, resultsProjection, null, null, null);
         //the cursor will currently read the most recent data
         if (categoryCursor != null && resultsCursor != null) {
@@ -123,7 +126,11 @@ public class CounterActivity extends Activity {
             mCounterInt.setText(resultsCursor.getString(resultsCursor
                     .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
 
-
+            long datesec = resultsCursor.getLong(resultsCursor.getColumnIndexOrThrow(ResultsTable.COLUMN_DATE));
+            Date date = new Date(datesec*1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d,yyyy", Locale.ENGLISH);
+            String formattedDate = sdf.format(date);
+            mUpdatedText.setText(formattedDate);
             resultsCursor.close();
         }
     }
@@ -146,7 +153,8 @@ public class CounterActivity extends Activity {
         String data = mCounterInt.getText().toString();
         Calendar cal = Calendar.getInstance();
         //for saving the date value for the data
-        int dateInSeconds = (int)((cal.getTimeInMillis()+cal.getTimeZone().getOffset(cal.getTimeInMillis()))/1000);
+        long dateInSeconds = (long)((cal.getTimeInMillis()+cal.getTimeZone().getOffset(cal.getTimeInMillis()))/1000);
+        Log.i("DATEDATE", "Date " + dateInSeconds);
         // only save if either summary or description
         // is available
 

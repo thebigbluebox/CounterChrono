@@ -21,7 +21,7 @@ public class ResultsTable {
             + TABLE_RESULTS
             + "("
             + COLUMN_ID + " integer primary key not null, "
-            + COLUMN_DATE + " date not null,"
+            + COLUMN_DATE + " integer not null,"
             + COLUMN_CATEGORY_ID + " text not null,"
             + COLUMN_RESULT + " text not null,"
             + "foreign key (" + COLUMN_CATEGORY_ID + ") references " + TABLE_CATEGORIES + "(" + TABLE_CATEGORIES_ID + ")"
