@@ -65,6 +65,7 @@ public class CounterActivity extends Activity {
             }
 
         });
+        //decreasing the counter
         decrease.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 count --;
@@ -72,6 +73,7 @@ public class CounterActivity extends Activity {
             }
 
         });
+        //long press of the decrease will reset the count to zero
         decrease.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -80,6 +82,7 @@ public class CounterActivity extends Activity {
                 return false;
             }
         });
+        //changing the decrease button text and color to show the extra things when long pressed
         decrease.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -102,25 +105,25 @@ public class CounterActivity extends Activity {
     private void fillData(Uri categoryUri, Uri resultsUri) {
         Log.i("Category URI", "Category URI " + categoryUri);
         Log.i("Results URI", "Results URI " + resultsUri);
-
+        //all of the queried columns must be first defined here, you can only query the columns listed here
         String[] categoryProjection = { CategoriesTable.COLUMN_TYPE, CategoriesTable.COLUMN_NAME};
         Cursor categoryCursor = getContentResolver().query(categoryUri, categoryProjection, null, null, null);
 
         String[] resultsProjection = { ResultsTable.COLUMN_ID, ResultsTable.COLUMN_RESULT, ResultsTable.COLUMN_CATEGORY_ID};
         Cursor resultsCursor = getContentResolver().query(resultsUri, resultsProjection, null, null, null);
-
+        //the cursor will currently read the most recent data
         if (categoryCursor != null && resultsCursor != null) {
             categoryCursor.moveToFirst();
             mTitleText.setText(categoryCursor.getString(categoryCursor
                     .getColumnIndexOrThrow(CategoriesTable.COLUMN_NAME)));
-            // always close the cursor
+
             categoryCursor.close();
 
             resultsCursor.moveToFirst();
             mCounterInt.setText(resultsCursor.getString(resultsCursor
                     .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
 
-            // always close the cursor
+
             resultsCursor.close();
         }
     }
@@ -142,6 +145,7 @@ public class CounterActivity extends Activity {
         String summary = mTitleText.getText().toString();
         String data = mCounterInt.getText().toString();
         Calendar cal = Calendar.getInstance();
+        //for saving the date value for the data
         int dateInSeconds = (int)((cal.getTimeInMillis()+cal.getTimeZone().getOffset(cal.getTimeInMillis()))/1000);
         // only save if either summary or description
         // is available
@@ -167,10 +171,5 @@ public class CounterActivity extends Activity {
             getContentResolver().update(CategoryUri, categoryValues, null, null);
             getContentResolver().update(ResultsUri, resultsValues, null, null);
         }
-    }
-
-    private void makeToast() {
-        Toast.makeText(CounterActivity.this, "Please maintain a summary",
-                Toast.LENGTH_LONG).show();
     }
 }

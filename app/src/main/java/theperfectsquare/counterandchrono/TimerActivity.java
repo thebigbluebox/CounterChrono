@@ -62,7 +62,7 @@ public class TimerActivity extends Activity {
                     .getParcelable(ResultsContentProvider.CONTENT_ITEM_TYPE);
             fillData(CategoryUri, ResultsUri);
         }
-
+        //starts the chrono on click
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(!running) {
@@ -73,6 +73,7 @@ public class TimerActivity extends Activity {
                 }
             }
         });
+        //resets the chrono on long click
         pauseButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -83,7 +84,7 @@ public class TimerActivity extends Activity {
                 return false;
             }
         });
-
+        //pauses the chrono on touch
         pauseButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 if(running == true){
@@ -94,6 +95,7 @@ public class TimerActivity extends Activity {
 
             }
         });
+        //changing the pause button text and color to show the extra things when long pressed
         pauseButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
