@@ -124,7 +124,7 @@ public class TimerActivity extends Activity {
         String[] categoryProjection = { CategoriesTable.COLUMN_TYPE, CategoriesTable.COLUMN_NAME};
         Cursor categoryCursor = getContentResolver().query(categoryUri, categoryProjection, null, null, null);
 
-        String[] resultsProjection = { ResultsTable.COLUMN_ID, ResultsTable.COLUMN_RESULT, ResultsTable.COLUMN_CATEGORY_ID};
+        String[] resultsProjection = { ResultsTable.COLUMN_ID, ResultsTable.COLUMN_RESULT, ResultsTable.COLUMN_CATEGORY_ID, ResultsTable.COLUMN_DATE};
         Cursor resultsCursor = getContentResolver().query(resultsUri, resultsProjection, null, null, null);
 
         if (categoryCursor != null && resultsCursor != null) {
@@ -136,10 +136,13 @@ public class TimerActivity extends Activity {
 
             resultsCursor.moveToFirst();
             //mDataText.setBase(SystemClock.elapsedRealtime() - stopTime);
+            stopTime = Long.parseLong(resultsCursor.getString(resultsCursor
+                    .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
             mDataText.setBase(SystemClock.elapsedRealtime() - Long.parseLong(resultsCursor.getString(resultsCursor
                     .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT))));
-            stopTime =Long.parseLong(resultsCursor.getString(resultsCursor
-                            .getColumnIndexOrThrow(ResultsTable.COLUMN_RESULT)));
+            //fixes the initalization of a timer and it starts to count prematurely
+            ((Chronometer) findViewById(R.id.chronometer)).stop();
+            stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
 
             long datesec = resultsCursor.getLong(resultsCursor.getColumnIndexOrThrow(ResultsTable.COLUMN_DATE));
             Date date = new Date(datesec*1000);
@@ -169,6 +172,7 @@ public class TimerActivity extends Activity {
         //pauses the clock so data can be saved
         ((Chronometer) findViewById(R.id.chronometer)).stop();
         stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
+        running = false;
         String data = Long.toString(stopTime);
         Calendar cal = Calendar.getInstance();
         //for saving the date value for the data
