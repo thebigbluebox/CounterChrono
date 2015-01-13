@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -104,7 +105,29 @@ public class CounterActivity extends Activity {
             }
         });
     }
-
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    //TODO
+                    count ++;
+                    mCounterInt.setText(Integer.toString(count));
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    //TODO
+                    count --;
+                    mCounterInt.setText(Integer.toString(count));
+                }
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
+    }
     private void fillData(Uri categoryUri, Uri resultsUri) {
         Log.i("Category URI", "Category URI " + categoryUri);
         Log.i("Results URI", "Results URI " + resultsUri);
