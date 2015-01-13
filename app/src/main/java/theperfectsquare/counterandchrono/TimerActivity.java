@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -67,33 +68,21 @@ public class TimerActivity extends Activity {
         //starts the chrono on click
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(!running) {
-                    mDataText.setBase(SystemClock.elapsedRealtime() - stopTime);
-                    ((Chronometer) findViewById(R.id.chronometer)).start();
-                    startTime = System.currentTimeMillis();
-                    running = true;
-                }
+                startTimer();
             }
         });
         //resets the chrono on long click
         pauseButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mDataText.setBase(SystemClock.elapsedRealtime());
-                mDataText.stop();
-                stopTime = 0;
-                running = false;
+                resetTimer();
                 return false;
             }
         });
         //pauses the chrono on touch
         pauseButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if(running == true){
-                    ((Chronometer) findViewById(R.id.chronometer)).stop();
-                    stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
-                    running = false;
-                }
+                pauseTimer();
 
             }
         });
@@ -116,7 +105,48 @@ public class TimerActivity extends Activity {
             }
         });
     }
-
+    public void resetTimer(){
+        mDataText.setBase(SystemClock.elapsedRealtime());
+        mDataText.stop();
+        stopTime = 0;
+        running = false;
+    }
+    public void pauseTimer(){
+        if(running == true){
+            ((Chronometer) findViewById(R.id.chronometer)).stop();
+            stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
+            running = false;
+        }
+    }
+    public void startTimer(){
+        if(!running) {
+            mDataText.setBase(SystemClock.elapsedRealtime() - stopTime);
+            ((Chronometer) findViewById(R.id.chronometer)).start();
+            startTime = System.currentTimeMillis();
+            running = true;
+        }
+    }
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    //TODO
+                   pauseTimer();
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    //TODO
+                   startTimer();
+                }
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
+    }
     private void fillData(Uri categoryUri, Uri resultsUri) {
         Log.i("Category URI", "Category URI " + categoryUri);
         Log.i("Results URI", "Results URI " + resultsUri);
@@ -170,9 +200,7 @@ public class TimerActivity extends Activity {
     private void saveState() {
         String summary = mTitleText.getText().toString();
         //pauses the clock so data can be saved
-        ((Chronometer) findViewById(R.id.chronometer)).stop();
-        stopTime=SystemClock.elapsedRealtime() - mDataText.getBase();
-        running = false;
+        pauseTimer();
         String data = Long.toString(stopTime);
         Calendar cal = Calendar.getInstance();
         //for saving the date value for the data
