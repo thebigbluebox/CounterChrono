@@ -15,7 +15,6 @@ import java.util.HashSet;
 
 import theperfectsquare.counterandchrono.database.CategoriesDataBaseHelper;
 import theperfectsquare.counterandchrono.database.CategoriesTable;
-import theperfectsquare.counterandchrono.database.ResultsDataBaseHelper;
 
 /**
  * Created by tai on 28/12/14.
